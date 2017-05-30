@@ -60,6 +60,39 @@ namespace LinqToTerraServerProvider
                     return m;
                 }
             }
+            else if (m.Method.Name == "Contains")
+            {
+                Expression valuesExpression = null;
+
+                if (m.Method.DeclaringType == typeof(Enumerable))
+                {
+                    if (ExpressionTreeHelpers.IsSpecificMemberExpression(m.Arguments[1], typeof(Place), "Name") ||
+                    ExpressionTreeHelpers.IsSpecificMemberExpression(m.Arguments[1], typeof(Place), "State"))
+                    {
+                        valuesExpression = m.Arguments[0];
+                    }
+                }
+                else if (m.Method.DeclaringType == typeof(List<string>))
+                {
+                    if (ExpressionTreeHelpers.IsSpecificMemberExpression(m.Arguments[0], typeof(Place), "Name") ||
+                    ExpressionTreeHelpers.IsSpecificMemberExpression(m.Arguments[0], typeof(Place), "State"))
+                    {
+                        valuesExpression = m.Object;
+                    }
+                }
+
+                if (valuesExpression == null || valuesExpression.NodeType != ExpressionType.Constant)
+                    throw new Exception("Could not find the location values.");
+
+                ConstantExpression ce = (ConstantExpression)valuesExpression;
+
+                IEnumerable<string> placeStrings = (IEnumerable<string>)ce.Value;
+                // Add each string in the collection to the list of locations to obtain data about. 
+                foreach (string place in placeStrings)
+                    locations.Add(place);
+
+                return m;
+            }
 
             return base.VisitMethodCall(m);
         }
