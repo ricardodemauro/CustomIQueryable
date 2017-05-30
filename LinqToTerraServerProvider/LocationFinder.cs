@@ -48,5 +48,20 @@ namespace LinqToTerraServerProvider
             else
                 return base.VisitBinary(be);
         }
+
+        protected override Expression VisitMethodCall(MethodCallExpression m)
+        {
+            if (m.Method.DeclaringType == typeof(String) && m.Method.Name == "StartsWith")
+            {
+                if (ExpressionTreeHelpers.IsSpecificMemberExpression(m.Object, typeof(Place), "Name") ||
+                ExpressionTreeHelpers.IsSpecificMemberExpression(m.Object, typeof(Place), "State"))
+                {
+                    locations.Add(ExpressionTreeHelpers.GetValueFromExpression(m.Arguments[0]));
+                    return m;
+                }
+            }
+
+            return base.VisitMethodCall(m);
+        }
     }
 }
