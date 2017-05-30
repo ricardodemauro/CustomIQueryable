@@ -10,4 +10,6 @@ Project based on [MSDN article](https://msdn.microsoft.com/en-us/library/bb54615
 - Investigate the other methods that the TerraServer-USA Web service exposes, and create a LINQ provider that interfaces with one of those methods.
 - Find a different Web service that you are interested in, and create a LINQ provider for it.
 - Create a LINQ provider for a data source other than a Web service.
-- For more information about how to create your own LINQ provider, see LINQ: Building an IQueryable Provider on MSDN Blogs.
+
+For more information about how to create your own LINQ provider, see [LINQ: Building an IQueryable Provider](http://go.microsoft.com/fwlink/?LinkID=112370) on MSDN Blogs.
+
